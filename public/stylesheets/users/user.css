@@ -16,7 +16,7 @@
 .user .logo {
     display: block;
     margin: 0 auto;
-    width: 100%;
+    width: 60%;
 }
 
 
@@ -29,15 +29,17 @@
 .user .text {
     text-align: left;
     font-size: 2.5rem;
+    color: #484882;
 }
 
 
 
 
-/* 비밀번호 찾기 | 회원가입 글자 */
+/* 비밀번호 변경 | 회원가입 글자 */
 .user-link {
     font-size: 2rem;
     text-decoration: none;
+    color: #484882;
 }
 
 .user input {
@@ -72,7 +74,7 @@
     
     box-shadow: 0.5rem 0.5rem 5px rgb(114, 114, 114);
 
-    text-decoration-color: #5B8243;
+    text-decoration-color: #484882;;
     font-size: 2.5rem;
 
     width: 100%;
