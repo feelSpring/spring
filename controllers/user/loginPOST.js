@@ -32,9 +32,10 @@ const login = async(req, res, next) => {
         });
     } catch(err) {
         res.status(500).send({
-            message: "나중에 다시 시도해주세요."
+            message: "나중에 다시 시도해주세요.",
         });
     }
 }
 
 module.exports = login;
+

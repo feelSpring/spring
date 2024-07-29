@@ -65,9 +65,50 @@ const getExercise = async (exerciseID) => {
         throw error;
     }
 };
+//추가한거--------------------------------------------------------------------
+// const getRecentExercises = async (userID, startDate, endDate) => {
+//     try {
+//         const data = await db.exerciseReport.findAll({
+//             where: {
+//                 user_id: userID,
+//                 exercise_date: {
+//                     [db.Sequelize.Op.between]: [startDate, endDate]
+//                 }
+//             }
+//         });
+//         return data;
+//     } catch (error) {
+//         console.error('Error in getRecentExercises:', error);
+//         throw error;
+//     }
+// };
+const getRecentExercises = async (userID) => {
+    try {
+        const today = new Date();
+        const endDate = new Date(today);
+        const startDate = new Date(today);
+        startDate.setDate(today.getDate() - 4);
+
+        const result = await db.exerciseReport.findAll({
+            where: {
+                user_id: userID,
+                exercise_date: {
+                    [db.Sequelize.Op.between]: [startDate.toISOString().split('T')[0], endDate.toISOString().split('T')[0]]
+                }
+            }
+        });
+        return result;
+    } catch (error) {
+        console.error('Error in getRecentExercises:', error);
+        throw error;
+    }
+};
+
+//----------------------------------------------------------------------------
 
 module.exports = {
     saveExercise,
     getExerciseByDate,
     getExercise,
+    getRecentExercises //
 };

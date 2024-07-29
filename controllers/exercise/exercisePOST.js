@@ -30,4 +30,3 @@ const saveExercise = async (req, res) => {
 }
 
 module.exports = saveExercise;
-

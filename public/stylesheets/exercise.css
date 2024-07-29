@@ -24,8 +24,11 @@ body{
 
 #but1, #but3 {
   width: 8rem;
-  height: 4rem;
-  font-size: 2rem;
+  height: 5rem;
+  font-size: 3rem;
+  color:#000000;
+  background-color: #E3E2E2; opacity:1;
+  border : 2px solid #E3E2E2;
 }
 
 #but2 {
@@ -44,11 +47,11 @@ body{
   align-items: flex-start;
   gap: 4rem;
 }
-
+/*왼쪽위 그래프*/
 .center1 {
   border: 0.2rem solid #E3E2E2;
-  background: #F7F7F7;
-  width: 100rem;
+  background: #FFFFFF;
+  width: 106rem;
   height : 76rem;
   padding : 3rem;
   border-radius: 2rem;
@@ -64,10 +67,10 @@ body{
   gap: 2rem;
   
 }
-
+/*오른쪽 날짜 칸*/
 #datePicker{
   border: 0.2rem solid #E3E2E2;
-  background: #ffffff;
+  background: #FFFFFF;
   width:96%;
   height: 5rem;
   font-size: 2rem;
@@ -92,22 +95,21 @@ body{
 .exercise-finish-time{
   display: inline-block !important;
 }
-
+/*오른쪽 오늘의 운동~ 칸*/
 #comments{
   border: 0.2rem solid #E3E2E2;
-  background: #ffffff;
+  background: #FFFFFF;
   padding: 2rem;
   width:90%;
   height:20rem;
   font-size: 2rem;
 }
-
-
+/*오른쪽 운동종류 칸*/
 #exercise_type{
   height : 5rem;
   font-size: 30px;
   border: 0.2rem solid #E3E2E2;
-  background: #ffffff;
+  background: #FFFFFF;
   padding: 0 1rem 0 1rem;
   width: 96%;
 }
@@ -116,18 +118,18 @@ body{
   display: flex;
   align-self: flex-end;
 }
-
+/*오른쪽 추가 버튼*/
 .tsubmitbut{
-    width: 17.1rem;
-    height: 4.7rem;
-    background-color: #DBE6D9;
-    border-radius: 1rem;
+    width: 40rem;
+    height: 6.0rem;
+    background-color: #E3E2E2;
+    border-radius: 2rem;
     border: 0rem;
     display: flex;
     font-size: 2.6rem;
     align-self: end;
-    display: flex;
     justify-content: center;
+    
 }
 
 .real-form {
@@ -142,7 +144,7 @@ body{
   border-radius: 2rem;
   border: 0.2rem solid #E3E2E2;
   padding: 3rem; 
-  background: #F7F7F7;
+  background: #FFFFFF;
 }
 
 #exerciseForm{
@@ -164,14 +166,14 @@ select {
     gap: 60px;
     margin : 100px;
 }
-
+/*
 .southleft {
   width : 600px; height : 400px;
   padding: 80px; 
   margin:25px  20px 0 180px;
 
   border-radius: 2rem;
-  border: 0.2rem solid #E3E2E2;
+  border: 0.2rem solid #c23232;
   width : 400px; height : 400px;
   padding: 80px; 
   background: #F7F7F7;
@@ -183,7 +185,7 @@ select {
   margin : 320px 0 0 -1300px;
 
   border-radius: 2rem;
-  border: 0.2rem solid #E3E2E2;
+  border: 0.2rem solid #a12626;
   width : 400px; height : 400px;
   padding: 80px; 
   background: #F7F7F7;
@@ -191,8 +193,8 @@ select {
 .south table {
   margin:30px 220px;
 }
-
-
+*/
+/*
  .calendar {
   width: 100%;
   border-collapse: collapse;
@@ -222,15 +224,15 @@ select {
 }
 .south th {
   font-size: 40px;
-} */
+} 
 
 
 .south td {
   font-size: 30px;
   background-color : #d0da22;
 } 
-
-
+*/
+/*오른쪽 평가점수 막대 바*/
   .progress-container {
     width: 100%;
     background-color: #e0e0e0;
@@ -265,7 +267,7 @@ select {
     cursor: pointer;
     display: none;
 }
-
+/*맨아래 이름,점수,내용 칸*/
 th{
   text-align: center;
   font-style: ExtraBold;
@@ -273,9 +275,10 @@ th{
   font-size: 2.6rem;
   height: 6.2rem;
   width: 100%;
-  color: #393939;
-  border-top: 1px solid #000000;
-  border-bottom: 1px solid #000000;
+  color: #393939; opacity:0.7;
+  background-color: #FFFFFF;
+  border-top: 1px solid #393939; opacity:0.5;;
+  border-bottom: 1px solid #393939; opacity:0.5;;
   vertical-align: middle; 
 }
 
@@ -301,15 +304,17 @@ tr{
   border-bottom: 1px solid #B8ACAC;
   vertical-align: middle; 
 }
-
+/*맨아래 이름,점수,내용 칸*/
 .result{
   border: 0.2rem solid #E3E2E2;
-  background: #F7F7F7;
-  width: 155rem;
+  background: #FFFFFF;
+  width: 165rem;
   height : 30rem;
   padding : 3rem;
   border-radius: 2rem;
   overflow: scroll;
+  margin-left: 7rem;
+  margin-top: 3rem;
 }
 
 .exercise-head{
@@ -350,3 +355,7 @@ p{
   margin-top: 0;
   margin-bottom: 0;
 }
+
+
+
+
