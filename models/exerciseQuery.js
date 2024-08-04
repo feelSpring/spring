@@ -1,6 +1,7 @@
 //시퀄라이즈 코드 작성
 // models/exerciseModel.js
 const db = require('./index');
+const { Op } = require('sequelize'); // Sequelize Op 가져오기
 
 const saveExercise = async (evaluation, exercise_date, start_time_hour, start_time_minute, end_time_hour, end_time_minute, exercise_type, comments, user_id) => {
     try {
@@ -65,9 +66,37 @@ const getExercise = async (exerciseID) => {
         throw error;
     }
 };
+//추가한거--------------------------------------------------------------------
+const getRecentExercises = async (userID) => {
+    try {
+        const today = new Date();
+        const endDate = new Date(today);
+        const startDate = new Date(today);
+        startDate.setDate(today.getDate() - 4);
+
+        // 날짜 형식을 YYYY-MM-DD로 변환
+        const formattedStartDate = startDate.toISOString().split('T')[0];
+        const formattedEndDate = endDate.toISOString().split('T')[0];
+
+        const result = await db.exerciseReport.findAll({
+            where: {
+                user_id: userID,
+                exercise_date: {
+                    [Op.between]: [formattedStartDate, formattedEndDate]
+                }
+            }
+        });
+        return result;
+    } catch (error) {
+        console.error('Error in getRecentExercises:', error);
+        throw error;
+    }
+};
+//----------------------------------------------------------------------------
 
 module.exports = {
     saveExercise,
     getExerciseByDate,
     getExercise,
+    getRecentExercises //
 };
