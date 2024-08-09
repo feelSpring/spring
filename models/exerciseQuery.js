@@ -67,25 +67,56 @@ const getExercise = async (exerciseID) => {
     }
 };
 //추가한거--------------------------------------------------------------------
+// const getRecentExercises = async (userID) => {
+//     try {
+//         const today = new Date();
+//         const endDate = new Date(today);
+//         const startDate = new Date(today);
+//         startDate.setDate(today.getDate() - 4);
+
+//         // 날짜 형식을 YYYY-MM-DD로 변환
+//         const formattedStartDate = startDate.toISOString().split('T')[0];
+//         const formattedEndDate = endDate.toISOString().split('T')[0];
+
+//         const result = await db.exerciseReport.findAll({
+//             where: {
+//                 user_id: userID,
+//                 exercise_date: {
+//                     [Op.between]: [formattedStartDate, formattedEndDate]
+//                 }
+//             }
+//         });
+//         // 확인: 반환하는 데이터가 배열인지
+//         console.log('Server Data:', result);
+
+//         return result;
+//     } catch (error) {
+//         console.error('Error in getRecentExercises:', error);
+//         throw error;
+//     }
+// };
 const getRecentExercises = async (userID) => {
     try {
+        console.log('Function getRecentExercises called'); // 함수 호출 로그
+        console.log('UserID:', userID); // 사용자 ID 로그
+        
         const today = new Date();
-        const endDate = new Date(today);
+        const endDate = today.toISOString().split('T')[0]; // 'YYYY-MM-DD'
         const startDate = new Date(today);
         startDate.setDate(today.getDate() - 4);
+        const startDateString = startDate.toISOString().split('T')[0]; // 'YYYY-MM-DD'
 
-        // 날짜 형식을 YYYY-MM-DD로 변환
-        const formattedStartDate = startDate.toISOString().split('T')[0];
-        const formattedEndDate = endDate.toISOString().split('T')[0];
-
+        console.log('Start Date:', startDateString, 'End Date:', endDate); // 날짜 로그
         const result = await db.exerciseReport.findAll({
             where: {
                 user_id: userID,
                 exercise_date: {
-                    [Op.between]: [formattedStartDate, formattedEndDate]
+                    [Op.between]: [startDateString, endDate]
                 }
             }
         });
+
+        console.log('Server Data:', result); // 데이터 확인
         return result;
     } catch (error) {
         console.error('Error in getRecentExercises:', error);
