@@ -237,8 +237,10 @@ function updateNewChart(exerciseData) {
   // 데이터를 날짜별로 그룹화하여 일일 총 운동 시간 계산
   const groupedData = exerciseData.reduce((acc, curr) => {
     const date = curr.exercise_date;
-    const start = new Date(`1970-01-01T${curr.start_exercise_time}:00`);
-    const end = new Date(`1970-01-01T${curr.end_exercise_time}:00`);
+    // const start = new Date(`1970-01-01T${curr.start_exercise_time}:00`); 오류
+    // const end = new Date(`1970-01-01T${curr.end_exercise_time}:00`); 오류
+    const start = new Date(`1970-01-01T${curr.start_exercise_time}`);
+    const end = new Date(`1970-01-01T${curr.end_exercise_time}`);
     const duration = (end - start) / (1000 * 60); // 분 단위로 계산
 
     if (!acc[date]) {
@@ -292,8 +294,8 @@ function updateNewChart(exerciseData) {
   });
 }
 
-// async function fetchExerciseData() {
-  async function getRecentExercises() {
+async function fetchExerciseData() {
+  // async function getRecentExercises() {
   try {
     const response = await fetch('/exercise/recent', {
       headers: {
@@ -316,8 +318,8 @@ function updateNewChart(exerciseData) {
   }
 }
 
-// window.addEventListener('load', fetchExerciseData);
-window.addEventListener('load', getRecentExercises);
+window.addEventListener('load', fetchExerciseData);
+// window.addEventListener('load', getRecentExercises);
 
 function previousDay() {
   // 이전 날짜로 이동

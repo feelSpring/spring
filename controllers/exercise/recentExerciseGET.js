@@ -15,7 +15,8 @@ module.exports = async (req, res) => {
         startDate.setDate(today.getDate() - 4);
         const startDateString = startDate.toISOString().split('T')[0];
 
-        const result = await getRecentExercises(userID, startDateString, endDate);
+        // const result = await getRecentExercises(userID, startDateString, endDate);
+        const result = await getRecentExercises(userID);
         console.log('Recent Exercises Data:', result); // 서버 데이터 로그
 
         res.status(200).json(result);
