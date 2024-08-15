@@ -26,6 +26,8 @@ body{
   width: 8rem;
   height: 4rem;
   font-size: 2rem;
+  background-color: #E3E2E2;
+  border: #E3E2E2;
 }
 
 #but2 {
@@ -301,14 +303,15 @@ tr{
   border-bottom: 1px solid #B8ACAC;
   vertical-align: middle; 
 }
-
+/*이름,점수,내용 뜨는 칸*/
 .result{
   border: 0.2rem solid #E3E2E2;
   background: #F7F7F7;
-  width: 155rem;
+  width: 158rem;
   height : 30rem;
   padding : 3rem;
   border-radius: 2rem;
+  margin-left: 6rem;
   overflow: scroll;
 }
 
