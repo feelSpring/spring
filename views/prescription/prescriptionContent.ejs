@@ -73,6 +73,7 @@
 		var popup = document.getElementById("popup");
 		popup.style.visibility = "hidden";
 		popup.style.opacity = "0";
+        window.location.href = '/prescription';
 	}
 
     document.getElementById('add-prescription-form').addEventListener('submit', function(event) {
@@ -98,7 +99,6 @@
         .then(data => {
             if (data.status) {
                 alert('처방약이 성공적으로 추가되었습니다.');
-                window.reload();
                 closePopup();
             } else {
                 alert('처방약 추가에 실패했습니다.');
@@ -126,6 +126,7 @@
 		var popup = document.getElementById("popupEdit");
 		popup.style.visibility = "hidden";
 		popup.style.opacity = "0";
+        window.location.href = '/prescription';
 	}
 
     document.getElementById('edit-prescription-form').addEventListener('submit', function(event) {
@@ -150,7 +151,6 @@
         .then(data => {
             if (data.status) {
                 alert('처방약 정보가 성공적으로 수정되었습니다.');
-                window.reload();
                 closePopupEdit();
             } else {
                 alert('처방약 수정에 실패했습니다.');
@@ -183,7 +183,6 @@
         .then(data => {
             if (data.status) {
                 alert('처방약이 성공적으로 삭제되었습니다.');
-                window.reload();
                 closePopupEdit();
             } else {
                 alert('처방약 삭제에 실패했습니다.');
