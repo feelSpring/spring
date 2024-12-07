@@ -1,8 +1,11 @@
 <!DOCTYPE html>
+  <meta charset="UTF-8"> <!---->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!---->
   <link href="/stylesheets/style.css" rel="stylesheet">
   <link rel="stylesheet" href="/stylesheets/exercise.css"> <!-- 내 스타일시트 파일 경로 -->
   <%-include('../header.ejs') %>
   <%-include('../menu.ejs') %>
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <body>
@@ -155,12 +158,16 @@
       </tbody>
     </table>
   </div>
-    
+
+    <!--추가한거--------------------------------------------------------------------->
+    <div class="end">
+      <canvas id="newExerciseChart" width="1550" height="650"></canvas>
+    </div>
+    <!------------------------------------------------------------------------------->
     
     <script> 
     let exerciseChart;
-    let token;
-
+    let token; 
     document.getElementById('exerciseForm').addEventListener('submit', async function(event) {
       event.preventDefault();
 
@@ -179,9 +186,8 @@
             sminute: sminute,
             fhour: fhour,
             fminute: fminute,
-            start_exercise_time: `${shour}:${sminute}`, // 추가된 필드
-            end_exercise_time: `${fhour}:${fminute}`,   // 추가된 필드
-            //exercise_date: new Date().toISOString().split('T')[0], // 현재 날짜 추가
+            start_exercise_time: `${shour}:${sminute}`, // 추가했던거
+            end_exercise_time: `${fhour}:${fminute}`,   // 추가했던거
             exercise_date: date,
             evaluation: star,
             comments: formData.get('comments')
@@ -205,41 +211,177 @@
         const result = await response.json();
         console.log(result);
         alert('운동 기록이 저장되었습니다');
-
+        updateChart(); // 새 데이터를 포함한 차트를 업데이트
+        updateNewChart(); // 새로운 차트도 업데이트
         window.location.reload(true);
   
     } catch (error) {
         console.error(error);
-        //alert('운동 기록 저장에 실패했습니다.'); 자꾸 창이떠서 걍 없앰
     }
   });
 
+  // 추가한거----------------------------------------------------------------------------------
+let newExerciseChart;
+
+function updateNewChart(exerciseData) {
+  const ctx = document.getElementById('newExerciseChart').getContext('2d');
+  
+  // 오늘 날짜 계산
+  const today = new Date();
+  const daysAgo = Array.from({length: 5}, (_, i) => {
+    const date = new Date(today);
+    date.setDate(today.getDate() - (4 - i));
+    return date.toISOString().split('T')[0];
+  });
+
+  // 데이터를 날짜별로 그룹화하여 일일 총 운동 시간 계산
+  const groupedData = exerciseData.reduce((acc, curr) => {
+    const date = curr.exercise_date;
+    // const start = new Date(`1970-01-01T${curr.start_exercise_time}:00`); 오류
+    // const end = new Date(`1970-01-01T${curr.end_exercise_time}:00`); 오류
+    const start = new Date(`1970-01-01T${curr.start_exercise_time}`);
+    const end = new Date(`1970-01-01T${curr.end_exercise_time}`);
+    const duration = (end - start) / (1000 * 60); // 분 단위로 계산
+
+    if (!acc[date]) {
+      acc[date] = 0;
+    }
+    acc[date] += duration;
+    return acc;
+  }, {});
+    // 콘솔 로그로 groupedData 확인-----------------------------------------ok
+    console.log('Grouped Data:', groupedData);
+
+  // 날짜와 총 운동 시간을 배열로 변환
+  const labels = daysAgo;
+  const data = labels.map(date => groupedData[date] || 0);
+  // 콘솔 로그로 labels와 data 확인-----------------------------------------ok
+  console.log('Labels:', labels);
+  console.log('Data:', data);
+
+  if (newExerciseChart) {
+    newExerciseChart.destroy();
+  }
+
+  newExerciseChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: '일일 총 운동 시간 (분)',
+        data: data,
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 3,
+        barThickness: 120,
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: '운동 시간 (분)'
+          }
+        },
+      },
+      plugins: {
+        legend: {
+          display: false
+        }
+      }
+    }
+  });
+}
+
+async function fetchExerciseData() {
+  // async function getRecentExercises() {
+  try {
+    const response = await fetch('/exercise/recent', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      // 응답이 실패하면 에러를 던집니다.
+      const errorText = await response.text();
+      throw new Error('Failed to fetch exercise data');
+    }
+
+    const data = await response.json();
+    // 콘솔 로그로 데이터 확인-----------------------------------not appear
+    console.log('Fetched Data:', data);
+    updateNewChart(data);
+  } catch (error) {
+    console.error('Error fetching exercise data:', error.message);
+  }
+}
+
+window.addEventListener('load', fetchExerciseData);
+// window.addEventListener('load', getRecentExercises);
+
+function previousDay() {
+  // 이전 날짜로 이동
+}
+
+function nextDay() {
+  // 다음 날짜로 이동
+}
+
+function updateChart() {
+  // 차트 업데이트
+}
+  //-------------------------------------------------------------------------------------------
+  
   //운동그래프 띄우기
   function updateChart(exerciseData) {
     const ctx = document.getElementById('exerciseChart').getContext('2d');
-    const chartData = {
-        labels: Array.from({ length: 24 }, (_, i) => `${i}시`),
-        datasets: exerciseData.map(data => {
-            const startHour = parseInt(data.start_exercise_time.split(':')[0]);
-            const endHour = parseInt(data.end_exercise_time.split(':')[0]);
-            const durationMinutes = (parseInt(data.end_exercise_time.split(':')[0]) * 60 + parseInt(data.end_exercise_time.split(':')[1])) -
-                                    (parseInt(data.start_exercise_time.split(':')[0]) * 60 + parseInt(data.start_exercise_time.split(':')[1]));
-            const durationHours = durationMinutes / 60;
-            return {
-                label: data.exercise_type,
-                data: Array.from({ length: 24 }, (_, i) => (i > startHour && i < endHour ? durationMinutes : 0)),
-                backgroundColor: getRandomColor(),
-                borderColor: getRandomColor(),
-                borderWidth: 1
-            };
-        })
-    };
+    const labels = Array.from({ length: 24 }, (_, i) => `${i}시`);
+
+    const datasets = exerciseData.map(data => {
+        const startHour = parseInt(data.start_exercise_time.split(':')[0]);
+        const endHour = parseInt(data.end_exercise_time.split(':')[0]);
+        const startMinutes = parseInt(data.start_exercise_time.split(':')[1]);
+        const endMinutes = parseInt(data.end_exercise_time.split(':')[1]);
+        
+        // 운동 시간(분) 계산
+        const durationMinutes = (endHour * 60 + endMinutes) - (startHour * 60 + startMinutes);
+        
+        // 각 시간별 운동 시간 배열 생성
+        const dataPoints = Array(24).fill(0);
+        for (let i = startHour; i <= endHour; i++) {
+            if (i === startHour && i === endHour) {
+                dataPoints[i] = durationMinutes; // 시작과 종료 시간이 같은 경우
+            } else if (i === startHour) {
+                dataPoints[i] = 60 - startMinutes; // 시작 시간
+            } else if (i === endHour) {
+                dataPoints[i] = endMinutes; // 종료 시간
+            } else {
+                dataPoints[i] = 60; // 그 사이 시간
+            }
+        }
+
+        return {
+            label: data.exercise_type,
+            data: dataPoints,
+            borderColor: getRandomColor(),
+            //backgroundColor: getRandomColor(),
+            borderWidth: 7
+        };
+    });
+
     if (exerciseChart) {
         exerciseChart.destroy();
     }
+
     exerciseChart = new Chart(ctx, {
         type: 'line',
-        data: chartData,
+        data: {
+            labels: labels,
+            datasets: datasets
+        },
         options: {
             scales: {
                 x: {
@@ -256,7 +398,7 @@
                         minRotation: 90,
                         font: {
                             size: 18 // x축 눈금 폰트 크기 설정
-                        } 
+                        }
                     }
                 },
                 y: {
@@ -283,17 +425,14 @@
                         font: {
                             size: 20 // 라벨 폰트 크기 설정
                         }
-                  
                     }
                 }
             },
-            
-
         }
     });
+
+  updateNewChart(exerciseData);
 }
-
-
       // 초기 로딩 시 현재 날짜 표시
       updateCurrentDate();
       // 하루 전 버튼 클릭 시
@@ -325,11 +464,10 @@
           console.log(data);
           updateChart(data);
           updateList(data);
+
         })
         .catch(error => console.error('Error fetching exercise entry:', error));
-        
       }
-
 
       // 날짜 형식을 YYYY.MM.DD로 변환하는 함수
       function formatDate(date) {
@@ -346,8 +484,8 @@
 
       document.addEventListener('DOMContentLoaded', function() {
         const today = formatDate(new Date());
-
         token = localStorage.getItem('token');
+
         if (token) {
             console.log('Token exists in localSotrage: ', token);
         }
@@ -355,7 +493,7 @@
             console.log('Token does not exist in localStorage');
             window.location.href = '/user/login';
         }
-
+        // 현재 날짜의 운동 기록 가져오기
         fetch(`/exercise/${today}`, {
             method: 'GET',
             headers: {
@@ -369,6 +507,21 @@
           updateList(data);
         })
         .catch(error => console.error('Error fetching exercise entry:', error));
+        
+  // 최근 5일간의 운동 데이터를 가져와서 새로운 차트를 업데이트-----------------------------------------------
+    fetch('/exercise/recent', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    .then(response => response.json())
+    .then(getRecentExercises => {
+        console.log('Recent Data:', getRecentExercises); // 데이터 구조를 확인합니다
+        updateNewChart(getRecentExercises);
+    })
+     .catch(error => console.error('Error fetching recent exercise data:', error));
+    //--------------------------------------------------------------------------------------------------------
       });
 
   // 차트 초기화
@@ -471,7 +624,6 @@
       tableBody.removeChild(tableBody.firstChild);
     }
 
-
     // 데이터 추가
     data.forEach(item => {
       const row = document.createElement('tr');
@@ -490,9 +642,8 @@
 
       tableBody.appendChild(row);
 });
+
   }
-
-
     </script>
   </body>
 </html> 
